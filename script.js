@@ -5,9 +5,10 @@ function init() {
      createLights();
      //createGrid();
      createPrimitive();
-     //---
+
      createParticleWord();
      animation();
+     window.addEventListener('click', addBubble, false);
 }
 //--------------------------------------------------------------------
 var scene, camera, renderer, container;
@@ -52,41 +53,40 @@ function createLights() {
      scene.add(_lights);
 }
 //--------------------------------------------------------------------
+
 var createParticleWord = function () {
      var geometry = new THREE.IcosahedronGeometry(0.7, 3);
-     var circle_start = 50;
-     var circle_count = 50;
-     var circle_colors = [
+     var bubble_start = 50;
+     var bubble_count = 15;
+     var bubble_colors = [
           0xffcc00, 0xffcc00
      ]
 
-     for (var i = 0; i < circle_count; i++) {
+     for (var i = 0; i < bubble_count; i++) {
           var material = new THREE.MeshBasicMaterial({
-               color: circle_colors[Math.floor(Math.random() * circle_colors.length)],
-
+               color: bubble_colors[Math.floor(Math.random() * bubble_colors.length)],
                //color: 0xF00000,
                //wireframe:false
           });
-          var circle = new THREE.Mesh(geometry, material);
-          circle.castShadow = true;
-          circle.receivedShadow = true;
+          var bubble = new THREE.Mesh(geometry, material);
+          bubble.castShadow = true;
+          bubble.receivedShadow = true;
 
-          circle.position.x = -Math.random() * circle_start + Math.random() * circle_start;
-          circle.position.z = -Math.random() * circle_start + Math.random() * circle_start;
-          circle.position.y = -Math.random() * circle_start + Math.random() * circle_start;
-          var circle_scale = Math.random() * 1;
-          var circle_random = Math.random() * 1;
-          circle.scale.set(circle_scale, circle_scale, circle_scale);
-          //TweenMax.to(circle.scale, 1+circle_random, {x:0, y:0, z:0, yoyo:true, repeat:-1, delay:0.04*i, ease:Elastic.easeIn});
-          //---
+          bubble.position.x = -Math.random() * bubble_start + Math.random() * bubble_start;
+          bubble.position.z = -Math.random() * bubble_start + Math.random() * bubble_start;
+          bubble.position.y = -Math.random() * bubble_start + Math.random() * bubble_start;
+          var bubble_scale = Math.random() * 1;
+          var bubble_random = Math.random() * 1;
+          bubble.scale.set(bubble_scale, bubble_scale, bubble_scale);
+
           var object_pos = world.children[0];
           var object_pos_range = 0;
           setInterval(function () {
                object_pos.position.x = -Math.random() * object_pos_range + Math.random() * object_pos_range;
                object_pos.position.y = -Math.random() * object_pos_range + Math.random() * object_pos_range;
                object_pos.position.z = -Math.random() * object_pos_range + Math.random() * object_pos_range;
-          }, 1000);
-          world.add(circle);
+          }, 100);
+          world.add(bubble);
      }
      scene.add(world);
 }
@@ -147,17 +147,22 @@ function animation() {
      requestAnimationFrame(animation);
      renderer.render(scene, camera);
 }
-/*
-distx = follower.x - mouseX;
-disty = follower.y - mouseY;
-momentumx -= distx / 3;
-momentumy -= disty / 3;
+//ADD bubble !
 
-// dampen the momentum a little
-momentumx *= 0.75;
-momentumy *= 0.75;
-
-// go get that mouse!
-follower.x += momentumx;
-follower.y += momentumy;
-*/
+function addBubble() {
+     var bubble_start = 10;
+     var material = new THREE.MeshBasicMaterial({
+          color: Math.random() * 0xffffff,
+          wireframe: true
+     });
+     var geometry = new THREE.IcosahedronGeometry(0.7, 3);
+     var bubble = new THREE.Mesh(geometry, material);
+     bubble.castShadow = true;
+     bubble.receivedShadow = true;
+     bubble.position.x = -Math.random() * bubble_start + Math.random() * bubble_start;
+     bubble.position.z = -Math.random() * bubble_start + Math.random() * bubble_start;
+     bubble.position.y = -Math.random() * bubble_start + Math.random() * bubble_start;
+     var bubble_scale = Math.random() * 1;
+     bubble.scale.set(bubble_scale, bubble_scale, bubble_scale);
+     world.add(bubble);
+}
